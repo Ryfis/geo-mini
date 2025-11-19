@@ -1,0 +1,144 @@
+/* Оптимизация загрузки карты */
+
+/* Базовые стили для Leaflet */
+.leaflet-container {
+  background: #e8e8e8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  touch-action: none;
+}
+
+/* Предзагрузка и плавная загрузка тайлов */
+.leaflet-tile-container {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.leaflet-tile {
+  will-change: opacity, transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.leaflet-tile-loaded {
+  opacity: 1;
+}
+
+/* Ускорение анимации загрузки */
+.leaflet-fade-anim .leaflet-tile {
+  will-change: opacity;
+  animation: fadein 0.2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Оптимизация маркеров */
+.leaflet-marker-icon {
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Предзагрузка кластеризации */
+.marker-cluster-small {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+.marker-cluster-medium {
+  background: rgba(34, 197, 94, 0.8);
+}
+
+.marker-cluster-large {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+/* Оптимизация попапов */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-tip {
+  background: white;
+}
+
+/* Индикатор загрузки */
+.map-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.map-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Скелетон загрузки */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Ускорение анимаций */
+.leaflet-zoom-anim .leaflet-zoom-animated {
+  -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+  transition: transform 0.25s cubic-bezier(0,0,0.25,1);
+}
+
+/* Предзагрузка критических ресурсов */
+.map-preload {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+}
+
+.map-preload::before {
+  content: '';
+  background-image: url('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+}
+
+/* Оптимизация для мобильных устройств */
+@media (max-width: 768px) {
+  .leaflet-container {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .leaflet-control-container .leaflet-control {
+    margin: 5px;
+  }
+}
